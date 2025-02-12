@@ -71,7 +71,7 @@ Then you will be able to push to master branch to deploy snapshot version automa
 
 Once you decide to publish release you just need to bump version at deps.edn:
 
-`:aliases -> :slim -> :exec-args -> :version -> "0.1.0`
+`:aliases -> :build -> :exec-args -> :version -> "0.1.0`
 
 and create a git tag with this version. There is a shortcut for this:
 

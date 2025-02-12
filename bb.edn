@@ -30,13 +30,13 @@
          :depends [fmt lint outdated test]}
 
   install {:doc "Install version locally"
-           :task (clojure "-T:slim install")}
+           :task (clojure "-T:build install")}
 
   deploy-snapshot {:doc "Deploy snapshot version to Clojars"
-                   :task (clojure "-T:slim deploy :snapshot true")}
+                   :task (clojure "-T:build deploy :snapshot true")}
 
   deploy-release {:doc "Deploy release version to Clojars"
-                  :task (clojure "-T:slim deploy")}
+                  :task (clojure "-T:build deploy")}
 
   release {:doc "Create and push git tag for release"
-           :task (clojure "-T:slim tag :push true")}}}
+           :task (clojure "-T:build tag :push true")}}}
