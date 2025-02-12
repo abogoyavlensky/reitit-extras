@@ -16,3 +16,8 @@
   []
   (reset)
   (test/run-all-tests #"reitit-extras.*-test"))
+
+(comment
+  ; Manage the system
+  (reset)
+  (run-all-tests))
