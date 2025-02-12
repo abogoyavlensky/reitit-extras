@@ -12,11 +12,16 @@ Additional utilities for the Reitit router.
 
 ## Development
 
-Install Java, Cloure and Babashka manully or run [mise](https://mise.jdx.dev/):
+### Requirements
+Install Java, Clojure and Babashka manually or via [mise](https://mise.jdx.dev/):
 
 ```shell
 mise install
 ```
+
+*Note: Check versions in `.mise.toml` file.*
+
+### Manage project
 
 All management tasks:
 
@@ -38,6 +43,8 @@ deploy-release  Deploy release version to Clojars
 release         Create and push git tag for release
 ```
 
+## Build and publish
+
 ### Install locally
 
 ```shell
@@ -48,7 +55,7 @@ bb install
 
 **Note:** Publishing to Clojars requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables.
 
-Deploy snaphost version:
+Deploy snapshost version:
 
 ```shell
 bb deploy-snapshot
@@ -71,9 +78,9 @@ Then you will be able to push to master branch to deploy snapshot version automa
 
 Once you decide to publish release you just need to bump version at deps.edn:
 
-`:aliases -> :build -> :exec-args -> :version -> "0.1.0`
+`:aliases -> :build -> :exec-args -> :version -> "0.1.1`
 
-and create a git tag with this version. There is a shortcut for this:
+and create a git tag with this version. There is a shortcut command for this:
 
 ```shell
 bb release
