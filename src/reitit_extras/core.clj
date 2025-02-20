@@ -15,8 +15,8 @@
   [handler context]
   (fn [request]
     (-> request
-      (assoc :context context)
-      (handler))))
+        (assoc :context context)
+        (handler))))
 
 (defn wrap-reload
   "Reload ring handler on every request. Useful in dev mode."
@@ -37,30 +37,26 @@
 
 ; Handlers
 
-(def ^:private cache-30d "public,max-age=2592000,immutable")
-
-(defn- resource-response-cached
-  ([path]
-   (resource-response-cached path {}))
-  ([path options]
-   (-> (response/resource-response path options)
-     (response/header "Cache-Control" cache-30d))))
+(def ^:private DEFAULT-CACHE-30D "public,max-age=2592000,immutable")
 
 (defn create-resource-handler-cached
-  [{:keys [cache-control]
-    :or cache-30d}]
-  (resource-response-cached {:cache-control cache-30d}))
-
-(defn create-resource-handler-cached-gziped
   "Return resource handler with optional Cache-Control header."
-  [{:keys [cached?]
+  [{:keys [cached? cache-control]
+    :or {cached? false
+         cache-control DEFAULT-CACHE-30D}
     :as opts}]
-  (let [response-fn (if cached?
-                      resource-response-cached
-                      response/resource-response)]
-    (-> response-fn
-      (ring/-create-file-or-resource-handler opts)
-      (gzip/wrap-gzip))))
+  (letfn [(resource-response-cached-fn
+            ([path]
+             (resource-response-cached-fn path {}))
+            ([path options]
+             (-> (response/resource-response path options)
+                 (response/header "Cache-Control" cache-control))))]
+    (let [response-fn (if cached?
+                        resource-response-cached-fn
+                        response/resource-response)]
+      (-> response-fn
+          (ring/-create-file-or-resource-handler opts)
+          (gzip/wrap-gzip)))))
 
 (defn render-html
   "Render hiccup content as HTML response.
@@ -69,10 +65,10 @@
   [content]
   (let [html-fn (requiring-resolve 'hiccup2.core/html)]
     (-> content
-      (html-fn)
-      (str)
-      (response/response)
-      (response/header "Content-Type" "text/html"))))
+        (html-fn)
+        (str)
+        (response/response)
+        (response/header "Content-Type" "text/html"))))
 
 ; Exceptions
 

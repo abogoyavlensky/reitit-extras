@@ -8,8 +8,7 @@
                               ring/ring-devel {:mvn/version "1.13.0"}}}
            :test {:extra-paths ["test"]
                   :extra-deps {eftest/eftest {:mvn/version "0.6.0"}
-                               cloverage/cloverage {:mvn/version "1.2.4"}
-                               circleci/bond {:mvn/version "0.6.0"}}
+                               cloverage/cloverage {:mvn/version "1.2.4"}}
                   :exec-fn cloverage.coverage/run-project
                   :exec-args {:test-ns-path ["test"]
                               :src-ns-path ["src"]
