@@ -62,7 +62,7 @@ bb install
 
 **Note:** Publishing to Clojars requires `CLOJARS_USERNAME` and `CLOJARS_PASSWORD` environment variables.
 
-Deploy snapshost version:
+Deploy snapshot version:
 
 ```shell
 bb deploy-snapshot
