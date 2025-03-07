@@ -30,6 +30,4 @@ jobs:
         env:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
-        run: |
-         bb install 
-         bb deploy-release
+        run: bb deploy-release
