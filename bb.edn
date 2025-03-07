@@ -29,6 +29,9 @@
   check {:doc "Run all code checks and tests"
          :depends [fmt lint outdated test]}
 
+  build {:doc "Build version locally"
+         :task (clojure "-T:build build")}
+
   install {:doc "Install version locally"
            :task (clojure "-T:build install")}
 
