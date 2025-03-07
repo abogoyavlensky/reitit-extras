@@ -1,0 +1,5 @@
+pre-push:
+  commands:
+    check:
+      glob: "*.{clj,edn}"
+      run: bb check
