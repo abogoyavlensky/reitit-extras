@@ -18,7 +18,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '21'
-#          cache: 'maven'
+          cache: ''
       - uses: jdx/mise-action@v2
         with:
 #          install_args: "babashka java clojure"
