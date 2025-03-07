@@ -8,7 +8,14 @@ Additional utilities for the Reitit router.
 
 ## Overview
 
-*TODO: Add library description!*
+A collection of practical utilities and middleware extensions for the Reitit router, including:
+
+- Context injection middleware for system dependencies
+- Development-mode handler reloading
+- Resource handlers with configurable caching
+- HTML rendering utilities with Hiccup integration
+- Comprehensive exception handling middleware
+- Testing utilities for HTTP servers
 
 ## Development
 
