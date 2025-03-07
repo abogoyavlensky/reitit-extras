@@ -1,4 +1,5 @@
-{:deps {amalloy/ring-gzip-middleware {:mvn/version "0.1.4"}}
+{:deps {amalloy/ring-gzip-middleware {:mvn/version "0.1.4"}
+        hiccup/hiccup {:mvn/version "2.0.0-RC4"}}
 
  :paths ["src"]
 

@@ -2,6 +2,7 @@
   "Useful Reitit router middlewares and helpers."
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
+            [hiccup2.core :as hiccup]
             [reitit.ring :as ring]
             [reitit.ring.middleware.exception :as exception]
             [ring.middleware.gzip :as gzip]
@@ -63,12 +64,11 @@
 
   Note: hiccup/hiccup is not a direct dependency of this library."
   [content]
-  (let [html-fn (requiring-resolve 'hiccup2.core/html)]
-    (-> content
-        (html-fn)
-        (str)
-        (response/response)
-        (response/header "Content-Type" "text/html"))))
+  (-> content
+      (hiccup/html)
+      (str)
+      (response/response)
+      (response/header "Content-Type" "text/html")))
 
 ; Exceptions
 
