@@ -3,6 +3,7 @@
   (:require [clojure.string :as str]
             [clojure.tools.logging :as log]
             [hiccup2.core :as hiccup]
+            [reitit.core :as reitit]
             [reitit.ring :as ring]
             [reitit.ring.middleware.exception :as exception]
             [ring.middleware.gzip :as gzip]
@@ -69,6 +70,17 @@
       (str)
       (response/response)
       (response/header "Content-Type" "text/html")))
+
+; URLs
+
+(defn get-route
+  "Return the API route by its name, with optional path and query parameters."
+  ([router route-name]
+   (get-route router route-name {}))
+  ([router route-name {:keys [path query]}]
+   (-> router
+       (reitit/match-by-name route-name path)
+       (reitit/match->path query))))
 
 ; Exceptions
 
