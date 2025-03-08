@@ -6,5 +6,9 @@ runs:
     - name: Cache Clojure deps
       uses: actions/cache@v4
       with:
-        path: ~/.m2/repository
+        path: |
+          ~/.m2/repository
+          ~/.gitlibs
+          ~/.clojure
+          ~/.cpcache
         key: ${{ runner.os }}-clojure-${{ hashFiles('**/deps.edn') }}
