@@ -1,8 +1,10 @@
 name: Cache Clojure deps
+
 inputs:
   key-label:
     description: 'Additional label for cache key'
     default: 'deps'
+
 runs:
   using: composite
   steps:
