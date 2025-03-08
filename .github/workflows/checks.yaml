@@ -11,6 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'lint'
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka cljfmt clj-kondo java clojure"
@@ -22,6 +24,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'outdated'
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka java clojure"
@@ -33,6 +37,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/cache-clojure-deps
+        with:
+          key-label: 'tests'
       - uses: jdx/mise-action@v2
         with:
           install_args: "babashka java clojure"
