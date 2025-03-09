@@ -35,3 +35,5 @@ jobs:
           CLOJARS_USERNAME: ${{ secrets.CLOJARS_USERNAME }}
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: bb deploy-release
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
