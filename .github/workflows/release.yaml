@@ -38,4 +38,11 @@ jobs:
           CLOJARS_PASSWORD: ${{ secrets.CLOJARS_PASSWORD }}
         run: bb deploy-release
       - name: Publish GitHub Release
-        uses: softprops/action-gh-release@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          gh release create "$TAG" \
+              --repo="$GITHUB_REPOSITORY" \
+              --title="${TAG}" \
+              --generate-notes
