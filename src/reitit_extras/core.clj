@@ -105,7 +105,7 @@
            :id "__anti-forgery-token"
            :value (force anti-forgery/*anti-forgery-token*)}])
 
-(def ^:private DEFAULT-CACHE-30D "public,max-age=2592000,immutable")
+(def ^:private DEFAULT-CACHE-365D "public,max-age=31536000,immutable")
 
 (defn create-resource-handler-cached
   "Return resource handler with optional Cache-Control header."
@@ -117,7 +117,7 @@
              (resource-response-cached-fn path {}))
             ([path options]
              (-> (response/resource-response path options)
-                 (response/header "Cache-Control" (or cache-control DEFAULT-CACHE-30D)))))]
+                 (response/header "Cache-Control" (or cache-control DEFAULT-CACHE-365D)))))]
     (let [response-fn (if cached?
                         resource-response-cached-fn
                         response/resource-response)]
@@ -132,8 +132,11 @@
       (response/response)
       (response/header "Content-Type" "text/html")))
 
-(defn- wrap-xss-protection [handler options]
-  (x-headers/wrap-xss-protection handler true (dissoc options :enable?)))
+(defn- wrap-xss-protection
+  ([handler]
+   (wrap-xss-protection handler {}))
+  ([handler _options]
+   (x-headers/wrap-xss-protection handler true nil)))
 
 (defn handler-ssr
   "Return main application handler for server-side rendering."
