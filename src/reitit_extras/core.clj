@@ -21,6 +21,7 @@
             [ring.middleware.not-modified :as not-modified]
             [ring.middleware.session :as ring-session]
             [ring.middleware.session.cookie :as ring-session-cookie]
+            [ring.middleware.ssl :as ring-ssl]
             [ring.middleware.x-headers :as x-headers]
             [ring.util.response :as response])
   (:import (java.security MessageDigest)))
@@ -146,6 +147,7 @@
                 :coercion coercion-malli/coercion
                 :middleware [[x-headers/wrap-content-type-options :nosniff]
                              [x-headers/wrap-frame-options :sameorigin]
+                             ring-ssl/wrap-hsts
                              not-modified/wrap-not-modified
                              content-type/wrap-content-type
                              [default-charset/wrap-default-charset "utf-8"]
