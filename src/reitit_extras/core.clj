@@ -132,6 +132,9 @@
       (response/response)
       (response/header "Content-Type" "text/html")))
 
+(defn- wrap-xss-protection [handler options]
+  (x-headers/wrap-xss-protection handler true (dissoc options :enable?)))
+
 (defn handler-ssr
   "Return main application handler for server-side rendering."
   [{:keys [routes default-handlers session-store]} {:keys [options]
@@ -148,6 +151,7 @@
                 :middleware [[x-headers/wrap-content-type-options :nosniff]
                              [x-headers/wrap-frame-options :sameorigin]
                              ring-ssl/wrap-hsts
+                             wrap-xss-protection
                              not-modified/wrap-not-modified
                              content-type/wrap-content-type
                              [default-charset/wrap-default-charset "utf-8"]
