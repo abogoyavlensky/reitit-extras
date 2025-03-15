@@ -126,13 +126,9 @@
           (gzip/wrap-gzip)))))
 
 (defn render-html
-  "Render hiccup content as HTML response.
-
-  Note: hiccup/hiccup is not a direct dependency of this library."
+  "Render hiccup content as HTML response."
   [content]
-  (-> content
-      (hiccup/html)
-      (str)
+  (-> (str "<!DOCTYPE html>\n" (hiccup/html content))
       (response/response)
       (response/header "Content-Type" "text/html")))
 
