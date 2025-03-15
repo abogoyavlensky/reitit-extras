@@ -109,15 +109,14 @@
 (defn create-resource-handler-cached
   "Return resource handler with optional Cache-Control header."
   [{:keys [cached? cache-control]
-    :or {cached? false
-         cache-control DEFAULT-CACHE-30D}
+    :or {cached? false}
     :as opts}]
   (letfn [(resource-response-cached-fn
             ([path]
              (resource-response-cached-fn path {}))
             ([path options]
              (-> (response/resource-response path options)
-                 (response/header "Cache-Control" cache-control))))]
+                 (response/header "Cache-Control" (or cache-control DEFAULT-CACHE-30D)))))]
     (let [response-fn (if cached?
                         resource-response-cached-fn
                         response/resource-response)]
