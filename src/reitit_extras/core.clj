@@ -171,8 +171,8 @@
                              ; parse any request parameters
                              ring-parameters/parameters-middleware
                              ring-multipart/multipart-middleware
-                             keyword-params/wrap-keyword-params
                              nested-params/wrap-nested-params
+                             keyword-params/wrap-keyword-params
                              ; negotiate request and response
                              muuntaja/format-middleware
                              ; Check CSRF token
