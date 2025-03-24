@@ -18,6 +18,8 @@
             [ring.middleware.cookies :as ring-cookies]
             [ring.middleware.default-charset :as default-charset]
             [ring.middleware.gzip :as gzip]
+            [ring.middleware.keyword-params :as keyword-params]
+            [ring.middleware.nested-params :as nested-params]
             [ring.middleware.not-modified :as not-modified]
             [ring.middleware.session :as ring-session]
             [ring.middleware.session.cookie :as ring-session-cookie]
@@ -168,8 +170,9 @@
                              [wrap-context context]
                              ; parse any request parameters
                              ring-parameters/parameters-middleware
-                             ; send files
                              ring-multipart/multipart-middleware
+                             keyword-params/wrap-keyword-params
+                             nested-params/wrap-nested-params
                              ; negotiate request and response
                              muuntaja/format-middleware
                              ; Check CSRF token
