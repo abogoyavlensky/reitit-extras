@@ -101,11 +101,23 @@
 ; Handlers
 
 (defn csrf-token
+  "Return the CSRF token value."
+  []
+  (force anti-forgery/*anti-forgery-token*))
+
+(defn csrf-token-html
+  "Return a hidden input field with the CSRF token."
   []
   [:input {:type "hidden"
            :name "__anti-forgery-token"
            :id "__anti-forgery-token"
-           :value (force anti-forgery/*anti-forgery-token*)}])
+           :value (csrf-token)}])
+
+(defn csrf-token-json
+  "Return a JSON object as string with the CSRF token.
+   Useful for headers in AJAX requests."
+  []
+  (format "{\"X-CSRF-Token\": \"%s\"}" (csrf-token)))
 
 (def ^:private DEFAULT-CACHE-365D "public,max-age=31536000,immutable")
 
@@ -176,7 +188,7 @@
                              ; negotiate request and response
                              muuntaja/format-middleware
                              ; Check CSRF token
-                             ; add call (linkboard.components/csrf-token) to a form
+                             ; add call (linkboard.components/csrf-token-html) to a form
                              anti-forgery/wrap-anti-forgery
                              ; handle exceptions
                              exception-middleware
