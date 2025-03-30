@@ -10,7 +10,7 @@
    (get-server-url server :host))
   ([server env]
    (let [base-url (case env
-                    :host "http://localhost"
+                    :host "http://localhost:"
                     :container "http://host.testcontainers.internal:")
          port (.getLocalPort (first (.getConnectors server)))]
      (str base-url port))))
