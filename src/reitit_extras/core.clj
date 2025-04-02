@@ -168,39 +168,39 @@
          :data {:muuntaja muuntaja-core/instance
                 :coercion coercion-malli/coercion
                 :middleware (vec
-                             (concat
-                               middlewares
-                               [[x-headers/wrap-content-type-options :nosniff]
-                                [x-headers/wrap-frame-options :sameorigin]
-                                ring-ssl/wrap-hsts
-                                wrap-xss-protection
-                                not-modified/wrap-not-modified
-                                content-type/wrap-content-type
-                                [default-charset/wrap-default-charset "utf-8"]
-                                ring-cookies/wrap-cookies
-                                [ring-session/wrap-session
-                                 {:cookie-attrs {:secure true
-                                                 :http-only true}
-                                  :flash true
-                                  :store session-store}]
+                              (concat
+                                middlewares
+                                [[x-headers/wrap-content-type-options :nosniff]
+                                 [x-headers/wrap-frame-options :sameorigin]
+                                 ring-ssl/wrap-hsts
+                                 wrap-xss-protection
+                                 not-modified/wrap-not-modified
+                                 content-type/wrap-content-type
+                                 [default-charset/wrap-default-charset "utf-8"]
+                                 ring-cookies/wrap-cookies
+                                 [ring-session/wrap-session
+                                  {:cookie-attrs {:secure true
+                                                  :http-only true}
+                                   :flash true
+                                   :store session-store}]
                                 ; add handler options to request
-                                [wrap-context context]
+                                 [wrap-context context]
                                 ; parse any request parameters
-                                ring-parameters/parameters-middleware
-                                ring-multipart/multipart-middleware
-                                nested-params/wrap-nested-params
-                                keyword-params/wrap-keyword-params
+                                 ring-parameters/parameters-middleware
+                                 ring-multipart/multipart-middleware
+                                 nested-params/wrap-nested-params
+                                 keyword-params/wrap-keyword-params
                                 ; negotiate request and response
-                                muuntaja/format-middleware
+                                 muuntaja/format-middleware
                                 ; Check CSRF token
                                 ; add call (linkboard.components/csrf-token-html) to a form
-                                anti-forgery/wrap-anti-forgery
+                                 anti-forgery/wrap-anti-forgery
                                 ; handle exceptions
-                                exception-middleware
+                                 exception-middleware
                                 ; coerce request and response to spec
-                                ring-coercion/coerce-exceptions-middleware
-                                ring-coercion/coerce-request-middleware
-                                ring-coercion/coerce-response-middleware]))}})
+                                 ring-coercion/coerce-exceptions-middleware
+                                 ring-coercion/coerce-request-middleware
+                                 ring-coercion/coerce-response-middleware]))}})
       (ring/routes
         (create-resource-handler-cached {:path "/assets/"
                                          :cached? (:cache-assets? options)
