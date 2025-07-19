@@ -4,15 +4,18 @@
             [clojure.tools.logging :as log]
             [hiccup2.core :as hiccup]
             [muuntaja.core :as muuntaja-core]
+            [reitit.coercion :as coercion]
             [reitit.coercion.malli :as coercion-malli]
             [reitit.core :as reitit]
             [reitit.dev.pretty :as pretty]
+            [reitit.impl :as impl]
             [reitit.ring :as ring]
             [reitit.ring.coercion :as ring-coercion]
             [reitit.ring.middleware.exception :as exception]
             [reitit.ring.middleware.multipart :as ring-multipart]
             [reitit.ring.middleware.muuntaja :as muuntaja]
             [reitit.ring.middleware.parameters :as ring-parameters]
+            [reitit.spec :as rs]
             [ring.middleware.anti-forgery :as anti-forgery]
             [ring.middleware.content-type :as content-type]
             [ring.middleware.cookies :as ring-cookies]
@@ -146,14 +149,55 @@
       (response/response)
       (response/header "Content-Type" "text/html")))
 
-(defn- wrap-xss-protection
+(defn wrap-xss-protection
   ([handler]
    (wrap-xss-protection handler {}))
   ([handler _options]
    (x-headers/wrap-xss-protection handler true nil)))
 
+(def non-throwing-coerce-request-middleware
+  "Middleware for validating and coercing request parameters based on route specs.
+  Expects a `:coercion` of type `reitit.coercion/Coercion` and `:parameters` defined in
+  route data. If either is missing, the middleware will not mount. Validates request
+  parameters against specs and coerces them to the correct types. If coercion fails,
+  does not throw an exception but passes a request with `:errors` key containing.
+  Based on `reitit.ring.coercion/coerce-request-middleware` but does not throw exceptions."
+  {:name ::ring-coercion/coerce-request
+   :spec ::rs/parameters
+   :compile (fn [{:keys [coercion parameters request]} opts]
+              (cond
+                ;; no coercion, skip
+                (not coercion) nil
+                ;; just coercion, don't mount
+                (not (or parameters request)) {}
+                ;; mount
+                :else
+                (if-let [coercers (coercion/request-coercers coercion parameters request opts)]
+                  (fn [handler]
+                    (fn
+                      ([request]
+                       (let [coerced (try
+                                       (coercion/coerce-request coercers request)
+                                       (catch Exception e
+                                         {:errors (coercion/encode-error (ex-data e))}))]
+                         (if (contains? coerced :errors)
+                           (handler (impl/fast-assoc request :errors (:errors coerced)))
+                           (handler (impl/fast-assoc request :parameters coerced)))))
+                      ([request respond raise]
+                       (let [coerced (try
+                                       (coercion/coerce-request coercers request)
+                                       (catch Exception e
+                                         {:errors (coercion/encode-error (ex-data e))}))]
+                         (if (contains? coerced :errors)
+                           (handler (impl/fast-assoc request :errors (:errors coerced)) respond raise)
+                           (handler (impl/fast-assoc request :parameters coerced) respond raise))))))
+                  {})))})
+
 (defn handler-ssr
-  "Return main application handler for server-side rendering."
+  "Return main application handler for server-side rendering.
+
+  DEPRECATED: Define the server directly in a project instead.
+  Can be used as an example of how to create a handler with Reitit."
   [{:keys [routes default-handlers session-store middlewares]
     :or {middlewares []}}
    {:keys [options]
@@ -193,7 +237,7 @@
                                 ; negotiate request and response
                                  muuntaja/format-middleware
                                 ; Check CSRF token
-                                ; add call (linkboard.components/csrf-token-html) to a form
+                                ; add call (csrf-token-html) to a form
                                  anti-forgery/wrap-anti-forgery
                                 ; handle exceptions
                                  exception-middleware
