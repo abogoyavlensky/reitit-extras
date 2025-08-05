@@ -155,6 +155,14 @@
   ([handler _options]
    (x-headers/wrap-xss-protection handler true nil)))
 
+(defn- ->keyword-keys
+  [m]
+  (reduce-kv
+    (fn [acc k v]
+      (assoc acc (if (keyword? k) k (keyword k)) v))
+    {}
+    m))
+
 (def non-throwing-coerce-request-middleware
   "Middleware for validating and coercing request parameters based on route specs.
   Expects a `:coercion` of type `reitit.coercion/Coercion` and `:parameters` defined in
@@ -179,17 +187,30 @@
                        (let [coerced (try
                                        (coercion/coerce-request coercers request)
                                        (catch Exception e
-                                         {:errors (coercion/encode-error (ex-data e))}))]
+                                         {:errors (coercion/encode-error (ex-data e))}))
+                             {:keys [form-params path-params query-params]} request]
                          (if (contains? coerced :errors)
-                           (handler (impl/fast-assoc request :errors (:errors coerced)))
+                           (handler (-> request
+                                        (impl/fast-assoc :errors (:errors coerced))
+                                        (impl/fast-assoc :parameters (cond-> {}
+                                                                       (seq form-params) (assoc :form (->keyword-keys form-params))
+                                                                       (seq path-params) (assoc :path (->keyword-keys path-params))
+                                                                       (seq query-params) (assoc :query (->keyword-keys query-params))))))
                            (handler (impl/fast-assoc request :parameters coerced)))))
                       ([request respond raise]
                        (let [coerced (try
                                        (coercion/coerce-request coercers request)
                                        (catch Exception e
-                                         {:errors (coercion/encode-error (ex-data e))}))]
+                                         {:errors (coercion/encode-error (ex-data e))}))
+                             {:keys [form-params path-params query-params]} request]
                          (if (contains? coerced :errors)
-                           (handler (impl/fast-assoc request :errors (:errors coerced)) respond raise)
+                           (handler (-> request
+                                        (impl/fast-assoc :errors (:errors coerced))
+                                        (impl/fast-assoc :parameters (cond-> {}
+                                                                             (seq form-params) (assoc :form (->keyword-keys form-params))
+                                                                             (seq path-params) (assoc :path (->keyword-keys path-params))
+                                                                             (seq query-params) (assoc :query (->keyword-keys query-params)))))
+                                    respond raise)
                            (handler (impl/fast-assoc request :parameters coerced) respond raise))))))
                   {})))})
 
