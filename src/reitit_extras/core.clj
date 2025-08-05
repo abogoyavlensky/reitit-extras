@@ -207,9 +207,9 @@
                            (handler (-> request
                                         (impl/fast-assoc :errors (:errors coerced))
                                         (impl/fast-assoc :parameters (cond-> {}
-                                                                             (seq form-params) (assoc :form (->keyword-keys form-params))
-                                                                             (seq path-params) (assoc :path (->keyword-keys path-params))
-                                                                             (seq query-params) (assoc :query (->keyword-keys query-params)))))
+                                                                       (seq form-params) (assoc :form (->keyword-keys form-params))
+                                                                       (seq path-params) (assoc :path (->keyword-keys path-params))
+                                                                       (seq query-params) (assoc :query (->keyword-keys query-params)))))
                                     respond raise)
                            (handler (impl/fast-assoc request :parameters coerced) respond raise))))))
                   {})))})
