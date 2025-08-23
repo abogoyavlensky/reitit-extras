@@ -78,8 +78,8 @@ non-throwing-coerce-request-middleware
 
 ### URL Generation
 ```clojure
-(get-route router route-name)
-(get-route router route-name {:keys [path query]})
+(route router route-name)
+(route router route-name {:keys [path query]})
 ; Generate URLs from route names with optional parameters
 ```
 

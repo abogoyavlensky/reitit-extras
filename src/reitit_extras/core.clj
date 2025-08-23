@@ -60,14 +60,16 @@
 
 ; URLs
 
-(defn get-route
+(defn route
   "Return the API route by its name, with optional path and query parameters."
   ([router route-name]
-   (get-route router route-name {}))
+   (route router route-name {}))
   ([router route-name {:keys [path query]}]
    (-> router
        (reitit/match-by-name route-name path)
        (reitit/match->path query))))
+
+(def ^:deprecated get-route route)
 
 ; Exceptions
 
