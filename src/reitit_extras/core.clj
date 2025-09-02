@@ -69,7 +69,9 @@
        (reitit/match-by-name route-name path)
        (reitit/match->path query))))
 
-(def ^:deprecated get-route route)
+(def get-route
+  "Alias for reitit-extras/route."
+  route)
 
 ; Exceptions
 
