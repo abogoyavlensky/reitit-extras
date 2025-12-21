@@ -9,7 +9,7 @@ jobs:
   lint-fmt:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cache-clojure-deps
         with:
           key-label: 'lint'
@@ -22,7 +22,7 @@ jobs:
   outdated:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cache-clojure-deps
         with:
           key-label: 'outdated'
@@ -35,7 +35,7 @@ jobs:
   tests:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v6
       - uses: ./.github/actions/cache-clojure-deps
         with:
           key-label: 'tests'
