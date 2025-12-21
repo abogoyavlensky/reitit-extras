@@ -117,7 +117,6 @@
   []
   [:input {:type "hidden"
            :name "__anti-forgery-token"
-           :id "__anti-forgery-token"
            :value (csrf-token)}])
 
 (defn csrf-token-json
